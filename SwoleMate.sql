@@ -1,82 +1,64 @@
---
--- This SQL script builds a monopoly database, deleting any pre-existing version.
---
--- @author kvlinden
--- @version Summer, 2015
---
+DROP TABLE IF EXISTS Review;
+DROP TABLE IF EXISTS Workout;
+DROP TABLE IF EXISTS Message;
+DROP TABLE IF EXISTS MatchCriteria;
+DROP TABLE IF EXISTS PersonalTrainer;
+DROP TABLE IF EXISTS User;
 
--- Drop previous versions of the tables if they they exist, in reverse order of foreign keys.
-DROP TABLE IF EXISTS PlayerGame;
-DROP TABLE IF EXISTS Game;
-DROP TABLE IF EXISTS Player;
-DROP TABLE IF EXISTS Property;
-DROP TABLE IF EXISTS PlayerProperty;
+CREATE TABLE User (
+    ID SERIAL PRIMARY KEY,
+    emailAddress VARCHAR(50) NOT NULL,
+    password VARCHAR(50) NOT NULL,
+    username VARCHAR(50) NOT NULL,
+    location VARCHAR(100),
+    experienceLevel VARCHAR(50),
+    profilePicture VARCHAR(255)
+);
 
--- Create the schema.
-CREATE TABLE Game (
-	ID integer PRIMARY KEY,
-	time timestamp
-	);
+CREATE TABLE PersonalTrainer (
+    ID SERIAL PRIMARY KEY,
+    certificationLevel VARCHAR(50),
+    experienceOnJob INTEGER,
+    cost DECIMAL(10, 2),
+    userID INTEGER REFERENCES User(ID) ON DELETE CASCADE
+);
 
-CREATE TABLE Player (
-	ID integer PRIMARY KEY, 
-	emailAddress varchar(50) NOT NULL,
-	name varchar(50)
-	);
+CREATE TABLE Message (
+    ID SERIAL PRIMARY KEY,
+    senderID INTEGER REFERENCES User(ID) ON DELETE CASCADE,
+    receiverID INTEGER REFERENCES User(ID) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-CREATE TABLE PlayerGame (
-	gameID integer REFERENCES Game(ID), 
-	playerID integer REFERENCES Player(ID),
-	score integer,
-	cash integer,
-	location integer, 
-	PRIMARY KEY (gameID, playerID)
-	);
+CREATE TABLE Workout (
+    ID SERIAL PRIMARY KEY,
+    workoutType VARCHAR(50) NOT NULL,
+    time TIME NOT NULL,
+    location VARCHAR(100),
+    userID INTEGER REFERENCES User(ID) ON DELETE CASCADE
+);
 
-CREATE TABLE Property (
-    propertyID integer PRIMARY KEY,
-    name varchar(50),
-    price integer,
-    housePrice integer,
-    hotelPrice integer
-	);
+CREATE TABLE MatchCriteria (
+    ID SERIAL PRIMARY KEY,
+    workoutType VARCHAR(50),
+    experienceLevel VARCHAR(50),
+    location VARCHAR(100),
+    trainerOrNot BOOLEAN,
+    userID INTEGER REFERENCES User(ID) ON DELETE CASCADE
+);
 
-CREATE TABLE PlayerProperty (
-	playerID INT REFERENCES Player(ID),
-    propertyID INT REFERENCES Property(propertyID),
-    houses INT,         
-    hotels INT,          
-    PRIMARY KEY (playerID, propertyID)
-	);
+CREATE TABLE Review (
+    ID SERIAL PRIMARY KEY,
+    rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    comment TEXT,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    userID INTEGER REFERENCES User(ID) ON DELETE CASCADE
+);
 
-
--- Allow users to select data from the tables.
-GRANT SELECT ON Game TO PUBLIC;
-GRANT SELECT ON Player TO PUBLIC;
-GRANT SELECT ON PlayerGame TO PUBLIC;
-GRANT SELECT ON Property TO PUBLIC;
-GRANT SELECT ON PlayerProperty TO PUBLIC;
-
--- Add sample records.
-INSERT INTO Game VALUES (1, '2006-06-27 08:00:00');
-INSERT INTO Game VALUES (2, '2006-06-28 13:20:00');
-INSERT INTO Game VALUES (3, '2006-06-29 18:41:00');
-
-INSERT INTO Player(ID, emailAddress) VALUES (1, 'me@calvin.edu');
-INSERT INTO Player VALUES (2, 'king@gmail.edu', 'The King');
-INSERT INTO Player VALUES (3, 'dog@gmail.edu', 'Dogbreath');
-
-INSERT INTO PlayerGame VALUES (1, 1, 0.00, 1500, 5);
-INSERT INTO PlayerGame VALUES (1, 2, 0.00, 2000, 10);
-INSERT INTO PlayerGame VALUES (1, 3, 2350.00, 1000, 15);
-INSERT INTO PlayerGame VALUES (2, 1, 1000.00, 1500, 7);
-INSERT INTO PlayerGame VALUES (2, 2, 0.00, 1000, 8);
-INSERT INTO PlayerGame VALUES (2, 3, 500.00, 500, 20);
-INSERT INTO PlayerGame VALUES (3, 2, 0.00, 2500, 11);
-INSERT INTO PlayerGame VALUES (3, 3, 5500.00, 3000, 25);
-
-INSERT INTO Property (propertyID, name, price, housePrice, hotelPrice) VALUES (1, 'Boardwalk', 400, 50, 100);
-INSERT INTO Property (propertyID, name, price, housePrice, hotelPrice) VALUES (2, 'Park Place', 350, 40, 90);
-
-INSERT INTO PlayerProperty (playerID, propertyID, houses, hotels) VALUES (1, 1, 2, 1); 
-INSERT INTO PlayerProperty (playerID, propertyID, houses, hotels) VALUES (2, 2, 1, 0);
+GRANT SELECT ON User TO PUBLIC;
+GRANT SELECT ON PersonalTrainer TO PUBLIC;
+GRANT SELECT ON Message TO PUBLIC;
+GRANT SELECT ON Workout TO PUBLIC;
+GRANT SELECT ON MatchCriteria TO PUBLIC;
+GRANT SELECT ON Review TO PUBLIC;
