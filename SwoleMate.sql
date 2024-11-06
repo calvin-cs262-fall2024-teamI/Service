@@ -51,9 +51,9 @@ CREATE TABLE "ChatRoom" (
     user2Id INTEGER NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
     createdAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    -- 确保user1Id总是较小的ID
+    -- Ensure user1Id is always the smaller ID
     CONSTRAINT userIdOrder CHECK (user1Id < user2Id),
-    -- 确保聊天室唯一性
+    -- Ensure chat room uniqueness
     CONSTRAINT uniqueChatRoom UNIQUE (user1Id, user2Id)
 );
 
