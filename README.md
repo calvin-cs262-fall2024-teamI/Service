@@ -3,7 +3,9 @@
 This is the backend service for [SwoleMate](https://github.com/calvin-cs262-fall2024-teamI/SwoleMateClient).
 
 [Database Schema](./SwoleMate.sql)
+
 [Database Schema With Sequelize](./src/models/)
+
 [Sample Data](./scripts/sample_data.ts)
 
 ### Setup
