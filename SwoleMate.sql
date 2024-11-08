@@ -2,18 +2,23 @@
 CREATE TYPE experienceLevel AS ENUM ('beginner', 'intermediate', 'advanced', 'expert');
 CREATE TYPE workoutStatus AS ENUM ('scheduled', 'completed', 'cancelled');
 CREATE TYPE buddyStatus AS ENUM ('pending', 'accepted', 'rejected');
+CREATE TYPE gender AS ENUM ('male', 'female');
+CREATE TYPE dayOfWeek AS ENUM ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
 
 -- User table
 CREATE TABLE "User" (
     id SERIAL PRIMARY KEY,
     emailAddress VARCHAR(255) UNIQUE NOT NULL,
-    passwordHash VARCHAR(255) NOT NULL,
     username VARCHAR(50) NOT NULL,
-    isTrainer BOOLEAN DEFAULT FALSE,
-    experienceLevel experienceLevel NOT NULL,
-    cost DECIMAL(10,2),  -- Only applicable if isTrainer is true
+    passwordHash VARCHAR(255) NOT NULL,
+    gender gender,
     profilePictureUrl VARCHAR(255),
+    experienceLevel experienceLevel,
     bio TEXT,
+    -- Personal Trainer specific fields
+    isTrainer BOOLEAN DEFAULT FALSE,
+    cost DECIMAL(5, 2) DEFAULT 0,
+    -- Only applicable if isTrainer is true
     createdAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -22,13 +27,16 @@ CREATE TABLE "User" (
 CREATE TABLE "UserPreference" (
     id SERIAL PRIMARY KEY,
     userId INTEGER NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
-    preferredGender VARCHAR(50),
+    preferredGender gender,
     preferredExperienceLevel experienceLevel,
-    preferredWorkoutTime TIME[],  -- Array of preferred times
-    preferredDays VARCHAR(10)[],   -- Array of preferred days (Monday, Tuesday, etc.)
-    maxBudget DECIMAL(10,2),       -- Maximum budget for trainer
-    goals TEXT[],                  -- Array of fitness goals
-    preferredAgeRange INT4RANGE,   -- Age range preference
+    preferredWorkoutTime TIME [],
+    -- Array of preferred times
+    preferredDays dayOfWeek [],
+    -- Array of preferred days (Monday, Tuesday, etc.)
+    maxBudget DECIMAL(10, 2),
+    -- Maximum budget for trainer
+    goals TEXT [],
+    -- Array of fitness goals
     createdAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -51,9 +59,9 @@ CREATE TABLE "ChatRoom" (
     user2Id INTEGER NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
     createdAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    -- 确保user1Id总是较小的ID
+    -- Ensure user1Id is always the smaller ID
     CONSTRAINT userIdOrder CHECK (user1Id < user2Id),
-    -- 确保聊天室唯一性
+    -- Ensure chat room uniqueness
     CONSTRAINT uniqueChatRoom UNIQUE (user1Id, user2Id)
 );
 
@@ -63,7 +71,6 @@ CREATE TABLE "ChatMessage" (
     chatRoomId INTEGER NOT NULL REFERENCES "ChatRoom"(id) ON DELETE CASCADE,
     senderId INTEGER NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
     messageText TEXT NOT NULL,
-    isRead BOOLEAN DEFAULT FALSE,
     createdAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
