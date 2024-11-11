@@ -1,74 +1,32 @@
-import { Router, Request, Response } from "express";
 import { User } from "@/models/User";
+import { RouterWithAsyncHandler } from "@/utils";
+import { ApiResponse } from "@/utils/responseWrapper";
 import bcrypt from "bcrypt";
+import { Request, Response } from "express";
 
-const authRouter = Router();
-
-// Sign up route
-authRouter.post("/signup", async (req: Request, res: Response) => {
-  try {
-    const { emailAddress, passwordHash, username } = req.body;
-
-    // Check if user already exists
-    const existingUser = await User.findOne({ where: { emailAddress } });
-    if (existingUser) {
-      res.status(400).json({ message: "User already exists" });
-      return;
-    }
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(passwordHash, 10);
-
-    // Create new user
-    const user = await User.create({
-      emailAddress: emailAddress,
-      passwordHash: hashedPassword,
-      username: username,
-    });
-
-    res.status(201).json({
-      message: "User created successfully",
-      user: {
-        id: user.id,
-        email: user.emailAddress,
-        name: user.username,
-      },
-    });
-  } catch (error) {
-    res.status(500).json({ message: "Error creating user", error });
-  }
-});
+const authRouter = RouterWithAsyncHandler();
 
 // Login route
 authRouter.post("/login", async (req: Request, res: Response) => {
-  try {
-    const { email: emailAddress, password } = req.body;
+  const { emailAddress, password } = req.body;
 
-    // Find user
-    const user = await User.findOne({ where: { emailAddress } });
-    if (!user) {
-      res.status(401).json({ message: "Invalid credentials" });
-      return;
-    }
-
-    // Check password
-    const isValidPassword = bcrypt.compareSync(password, user.passwordHash);
-    if (!isValidPassword) {
-      res.status(401).json({ message: "Invalid credentials" });
-      return;
-    }
-
-    res.json({
-      message: "Login successful",
-      user: {
-        id: user.id,
-        email: user.emailAddress,
-        name: user.username,
-      },
-    });
-  } catch (error) {
-    res.status(500).json({ message: "Error logging in", error });
+  // Find user
+  const user = await User.findOne({ where: { emailAddress } });
+  if (!user) {
+    res.status(401).json(ApiResponse.error("Invalid credentials"));
+    return;
   }
+
+  // Check password
+  const isValidPassword = bcrypt.compareSync(password, user.passwordHash);
+  if (!isValidPassword) {
+    res.status(401).json(ApiResponse.error("Invalid credentials"));
+    return;
+  }
+
+  const { id, username } = user;
+
+  res.json({ id, username, emailAddress });
 });
 
 export default authRouter;

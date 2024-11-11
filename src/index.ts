@@ -5,7 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
-
+import { getLocalIP } from "@/utils";
 dotenv.config();
 
 const app = express();
@@ -16,6 +16,7 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
+// response wrapper middleware
 app.use(responseHandler);
 
 crudRoutes.forEach(route => app.use("/api", route));
@@ -35,7 +36,7 @@ async function startServer() {
   }
   try {
     app.listen(Number(port), "0.0.0.0", () => {
-      console.log(`Server is running on http://0.0.0.0:${port}`);
+      console.log(`Server is running on http://${getLocalIP()}:${port}`);
     });
   } catch (error) {
     console.error("Unable to start server:", error);

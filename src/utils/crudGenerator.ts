@@ -1,5 +1,7 @@
-import { Request, Response, NextFunction, Router } from "express";
+import { Request, Response, Router } from "express";
 import { ModelStatic } from "sequelize";
+import { asyncHandler } from "@/utils";
+import { ApiResponse } from "./responseWrapper";
 
 interface CrudOptions {
   // custom route prefix
@@ -39,13 +41,6 @@ export function createCrudRouter(
     allowedSortFields = [],
     middleware = {},
   } = options;
-
-  // error handling wrapper
-  const asyncHandler = (fn: Function) => {
-    return (req: Request, res: Response, next: NextFunction) => {
-      Promise.resolve(fn(req, res, next)).catch(next);
-    };
-  };
 
   // apply common middleware
   if (middleware.all) {
@@ -92,15 +87,14 @@ export function createCrudRouter(
           offset,
         });
 
-        res.json({
-          data: rows,
-          pagination: {
+        res.json(
+          ApiResponse.success(rows, undefined, {
             page,
             limit,
             totalPages: Math.ceil(count / limit),
             totalItems: count,
-          },
-        });
+          })
+        );
       })
     );
   }
@@ -125,7 +119,7 @@ export function createCrudRouter(
       asyncHandler(async (req: Request, res: Response) => {
         const item = await Model.findByPk(req.params.id);
         if (!item) {
-          res.status(404).json({ message: "Resource not found" });
+          res.status(404).json(ApiResponse.error("Resource not found"));
           return;
         }
         res.json(item);
@@ -143,7 +137,7 @@ export function createCrudRouter(
           where: { id: req.params.id },
         });
         if (!item) {
-          res.status(404).json({ message: "Resource not found" });
+          res.status(404).json(ApiResponse.error("Resource not found"));
           return;
         }
         res.json(item);
@@ -159,7 +153,7 @@ export function createCrudRouter(
       asyncHandler(async (req: Request, res: Response) => {
         const item = await Model.destroy({ where: { id: req.params.id } });
         if (!item) {
-          res.status(404).json({ message: "Resource not found" });
+          res.status(404).json(ApiResponse.error("Resource not found"));
           return;
         }
         res.status(204).send();

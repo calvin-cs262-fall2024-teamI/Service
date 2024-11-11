@@ -12,7 +12,8 @@ This is the backend service for [SwoleMate](https://github.com/calvin-cs262-fall
 
 1. Install dependencies `npm install`
 2. Create `.env` file based on `.env.example`
-3. Run `npm run script scripts/syncDB.ts` to create tables.
+3. Run `npm run script scripts/syncDB.ts force` to create tables.
+4. Run `npm run script scripts/fakeDB.ts` to populate the database with sample data.
 
 ### Running scripts
 
@@ -25,3 +26,7 @@ npm run script <script-name> # e.g. scripts/xxx.ts
 ```bash
 npm run dev
 ```
+
+### API Documentation
+
+[API Documentation](./API.md)

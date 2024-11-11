@@ -3,11 +3,12 @@ import * as models from "@/models";
 
 async function syncDatabase() {
   console.log("Syncing database...");
+  const force = process.argv[2] === "force";
 
   try {
     for (const model of Object.values(models)) {
       console.log(`Syncing model: ${model.name}`);
-      await model.sync({ alter: true });
+      await model.sync({ force, alter: !force });
     }
     console.log("Database synced successfully");
     await sequelize.close();

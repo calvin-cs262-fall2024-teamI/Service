@@ -16,7 +16,6 @@ export class Workout extends Model<
   declare id: CreationOptional<number>;
   declare creatorId: number;
   declare partnerId: CreationOptional<number | null>;
-  declare workoutDate: Date;
   declare workoutTime: Date;
   declare location: CreationOptional<string | null>;
   declare status: WorkoutStatus;
@@ -50,12 +49,8 @@ Workout.init(
       },
       onDelete: "SET NULL",
     },
-    workoutDate: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
-    },
     workoutTime: {
-      type: DataTypes.TIME,
+      type: DataTypes.DATE,
       allowNull: false,
     },
     location: {
