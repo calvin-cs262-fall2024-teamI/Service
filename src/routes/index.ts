@@ -11,6 +11,7 @@ import authRouter from "./auth";
 
 const userRouter = createCrudRouter(User, {
   routePrefix: "/users",
+  excludeFields: ["passwordHash"],
 });
 
 const userPreferenceRouter = createCrudRouter(UserPreference, {

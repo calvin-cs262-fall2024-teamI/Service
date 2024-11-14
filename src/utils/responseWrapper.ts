@@ -24,7 +24,11 @@ export class ApiResponse<D, M> {
     return new ApiResponse(true, data, msg, meta);
   }
 
-  static error<M>(msg: string) {
+  static error(msg: string) {
     return new ApiResponse(false, null, msg);
+  }
+
+  static info(msg: string) {
+    return new ApiResponse(true, null, msg);
   }
 }

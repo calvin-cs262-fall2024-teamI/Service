@@ -6,6 +6,7 @@ export const responseHandler = (
   res: Response,
   next: NextFunction
 ) => {
+  // TODO: based on status code, return different format
   // Extend response object
   const originalJson = res.json;
   res.json = function (body: any) {

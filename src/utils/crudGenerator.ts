@@ -1,6 +1,7 @@
-import { Request, Response, Router } from "express";
-import { ModelStatic } from "sequelize";
+import { tokenValidator } from "@/middlewares";
 import { asyncHandler } from "@/utils";
+import { Request, Response, Router } from "express";
+import { ModelStatic, UniqueConstraintError } from "sequelize";
 import { ApiResponse } from "./responseWrapper";
 
 interface CrudOptions {
@@ -26,6 +27,8 @@ interface CrudOptions {
     delete?: any[];
     list?: any[];
   };
+  // fields to exclude from response
+  excludeFields?: string[];
 }
 
 export function createCrudRouter(
@@ -40,11 +43,17 @@ export function createCrudRouter(
     allowedFilters = [],
     allowedSortFields = [],
     middleware = {},
+    excludeFields = [],
   } = options;
+
+  // TODO: exclude some fields from response
+
+  // all the routes will be protected by token validator
+  middleware.all = [tokenValidator, ...(middleware.all || [])];
 
   // apply common middleware
   if (middleware.all) {
-    router.use(middleware.all);
+    router.use(routePrefix, middleware.all);
   }
 
   // list query (supports pagination, filtering, and sorting)
@@ -98,15 +107,26 @@ export function createCrudRouter(
       })
     );
   }
-
+  // node_modules/sequelize/src/dialects/postgres/query.js
   // create
   if (operations.includes("create")) {
     router.post(
       routePrefix + "/",
       ...(middleware.create || []),
       asyncHandler(async (req: Request, res: Response) => {
-        const item = await Model.create(req.body);
-        res.status(201).json(item);
+        try {
+          const item = await Model.create(req.body);
+          res.status(201).json(item);
+        } catch (error) {
+          if (error instanceof UniqueConstraintError) {
+            throw new Error(
+              Object.values(error.errors)
+                .map(e => e.message)
+                .join(", ")
+            );
+          }
+          throw error;
+        }
       })
     );
   }
@@ -133,13 +153,11 @@ export function createCrudRouter(
       routePrefix + "/:id",
       ...(middleware.update || []),
       asyncHandler(async (req: Request, res: Response) => {
-        const item = await Model.update(req.body, {
+        const [, [item]] = await Model.update(req.body, {
           where: { id: req.params.id },
+          returning: true,
         });
-        if (!item) {
-          res.status(404).json(ApiResponse.error("Resource not found"));
-          return;
-        }
+        if (!item) throw new Error("Resource not found");
         res.json(item);
       })
     );
