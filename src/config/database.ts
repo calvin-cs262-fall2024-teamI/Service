@@ -13,7 +13,7 @@ const sequelize = new Sequelize({
   // logging: false,
   logging: process.env.SQL_LOGGING === "true" ? console.log : false,
   dialectOptions: {
-    rejectUnauthorized: false,
+    ssl: { rejectUnauthorized: false },
   },
 });
 
