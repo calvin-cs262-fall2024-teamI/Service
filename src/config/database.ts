@@ -9,7 +9,7 @@ const sequelize = new Sequelize({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT!),
+  port: 5432,
   // logging: false,
   logging: process.env.SQL_LOGGING === "true" ? console.log : false,
   dialectOptions: {
