@@ -26,5 +26,15 @@ const sequelize = new Sequelize({
     match: [/SequelizeConnectionRefusedError/, /ECONNREFUSED/], // Match the connection refused errors
   },
 });
-
+// Test the database connection
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log(
+      "Connection to the database has been established successfully."
+    );
+  })
+  .catch(error => {
+    console.error("Unable to connect to the database:", error);
+  });
 export { sequelize };
