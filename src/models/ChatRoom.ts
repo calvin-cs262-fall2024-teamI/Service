@@ -47,5 +47,23 @@ ChatRoom.init(
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   },
-  { sequelize, tableName: "chatroom" }
+  {
+    sequelize,
+    tableName: "chatroom",
+    indexes: [
+      {
+        unique: true,
+        fields: ["user1Id", "user2Id"],
+      },
+    ],
+    validate: {
+      validUserIds() {
+        if ((this.user1Id as number) >= (this.user2Id as number)) {
+          throw new Error(
+            "user1Id must be less than user2Id and cannot be equal"
+          );
+        }
+      },
+    },
+  }
 );

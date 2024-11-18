@@ -1,22 +1,16 @@
-// Create sample data for the database
-import { sequelize } from "@/config/database";
 import {
+  BuddyMatch,
+  ChatMessage,
+  ChatRoom,
+  Review,
   User,
   UserPreference,
-  ChatRoom,
-  ChatMessage,
-  BuddyMatch,
-  Review,
+  Workout,
 } from "@/models";
 import { BuddyStatus, ExperienceLevel, WorkoutStatus } from "@/types/enums";
+import { faker } from "@faker-js/faker";
 
-interface IUser {
-  username: string;
-  passwordHash: string;
-  emailAddress: string;
-}
-
-const users: IUser[] = [
+export const users = User.bulkBuild([
   {
     username: "loya",
     passwordHash: "swolemate1234",
@@ -42,63 +36,81 @@ const users: IUser[] = [
     passwordHash: "swolemate1234",
     emailAddress: "mam64@calvin.edu",
   },
-];
+  ...Array(10)
+    .fill(null)
+    .map(() => {
+      const username = faker.internet.username();
+      return {
+        username,
+        passwordHash: username,
+        emailAddress: faker.internet.email(),
+      };
+    }),
+]);
 
-interface IUserPreference {
-  userId: number;
-  preferredExperienceLevel: ExperienceLevel;
-}
-
-const userPreferences: IUserPreference[] = [
+export const userPreferences = UserPreference.bulkBuild([
   {
     userId: 1,
     preferredExperienceLevel: ExperienceLevel.Beginner,
   },
   {
     userId: 2,
-    preferredExperienceLevel: ExperienceLevel.Intermediate,
+    preferredExperienceLevel: ExperienceLevel.Advanced,
   },
   {
     userId: 3,
     preferredExperienceLevel: ExperienceLevel.Advanced,
   },
-];
+  {
+    userId: 4,
+    preferredExperienceLevel: ExperienceLevel.Intermediate,
+  },
+  {
+    userId: 5,
+    preferredExperienceLevel: ExperienceLevel.Intermediate,
+  },
+  ...Array(10)
+    .fill(null)
+    .map((_, i) => ({
+      userId: i + 6,
+      preferredExperienceLevel: faker.helpers.arrayElement(
+        Object.values(ExperienceLevel)
+      ),
+    })),
+]);
 
-interface IChatRoom {
-  userId1: number;
-  userId2: number;
-}
+export const chatRooms = ChatRoom.bulkBuild([
+  {
+    user1Id: 1,
+    user2Id: 2,
+  },
+  {
+    user1Id: 1,
+    user2Id: 3,
+  },
+  {
+    user1Id: 1,
+    user2Id: 4,
+  },
+  {
+    user1Id: 1,
+    user2Id: 5,
+  },
+  ...Array(5)
+    .fill(null)
+    .map((_, i) => ({
+      user1Id: 2,
+      user2Id: 3 + i,
+    })),
+  ...Array(5)
+    .fill(null)
+    .map((_, i) => ({
+      user1Id: 3,
+      user2Id: 4 + i,
+    })),
+]);
 
-const chatRooms: IChatRoom[] = [
-  {
-    userId1: 1,
-    userId2: 2,
-  },
-  {
-    userId1: 2,
-    userId2: 3,
-  },
-  {
-    userId1: 3,
-    userId2: 4,
-  },
-  {
-    userId1: 1,
-    userId2: 4,
-  },
-  {
-    userId1: 1,
-    userId2: 3,
-  },
-];
-
-interface IChatMessage {
-  chatRoomId: number;
-  senderId: number;
-  messageText: string;
-}
-
-const chatMessages: IChatMessage[] = [
+export const chatMessages = ChatMessage.bulkBuild([
   {
     chatRoomId: 1,
     senderId: 1,
@@ -131,29 +143,18 @@ const chatMessages: IChatMessage[] = [
     senderId: 2,
     messageText: "Monday at 6pm works great for me! See you then! 💪",
   },
-];
+]);
 
-interface IReview {
-  reviewerId: number;
-  reviewedId: number;
-  rating: number;
-  reviewText: string;
-}
-
-const reviews: IReview[] = [
+export const reviews = Review.bulkBuild([
   {
     reviewerId: 2,
     reviewedId: 1,
     rating: 5,
-    reviewText:
-      "Great workout buddy! Very motivated and always on time. We've been meeting regularly for strength training and they've helped push me to new levels.",
   },
   {
     reviewerId: 1,
     reviewedId: 2,
     rating: 5,
-    reviewText:
-      "Excellent partner for cardio workouts. Very knowledgeable about proper form and technique. Made working out fun!",
   },
   {
     reviewerId: 3,
@@ -169,51 +170,50 @@ const reviews: IReview[] = [
     reviewText:
       "Friendly and encouraging. Always brings positive energy to our workout sessions.",
   },
-  {
-    reviewerId: 5,
-    reviewedId: 6,
-    rating: 5,
-    reviewText:
-      "Amazing trainer! Really helped me improve my form and achieve my fitness goals. Highly recommend!",
-  },
-  {
-    reviewerId: 7,
-    reviewedId: 8,
-    rating: 3,
-    reviewText:
-      "Decent workout partner but sometimes shows up late. Good person to train with when they're there.",
-  },
-];
+  ...Array(20)
+    .fill(null)
+    .map(() => {
+      let reviewerId = faker.number.int({ min: 1, max: 14 });
+      let reviewedId = faker.number.int({ min: 1, max: 15 });
+      if (reviewedId === reviewerId) reviewedId++;
+      return {
+        reviewerId,
+        reviewedId,
+        rating: faker.number.int({ min: 1, max: 5 }),
+        reviewText: faker.lorem.sentence(),
+      };
+    }),
+]);
 
-interface IWorkout {
-  creatorId: number;
-  partnerId: number;
-  workoutDate: Date;
-  status: WorkoutStatus;
-}
-
-const workouts: IWorkout[] = [
+export const workouts = Workout.bulkBuild([
   {
     creatorId: 1,
     partnerId: 2,
-    workoutDate: new Date("2024-01-15"),
+    workoutTime: new Date("2024-01-15"),
     status: WorkoutStatus.Completed,
   },
   {
     creatorId: 2,
     partnerId: 1,
-    workoutDate: new Date("2024-01-17"),
+    workoutTime: new Date("2024-01-17"),
     status: WorkoutStatus.Completed,
   },
-];
+  ...Array(20)
+    .fill(null)
+    .map(() => {
+      let creatorId = faker.number.int({ min: 1, max: 14 });
+      let partnerId = faker.number.int({ min: 1, max: 15 });
+      if (creatorId === partnerId) partnerId++;
+      return {
+        creatorId,
+        partnerId,
+        workoutTime: faker.date.soon(),
+        status: faker.helpers.arrayElement(Object.values(WorkoutStatus)),
+      };
+    }),
+]);
 
-interface IBuddyMatch {
-  requesterId: number;
-  receiverId: number;
-  status: BuddyStatus;
-}
-
-const buddyMatches: IBuddyMatch[] = [
+export const buddyMatches = BuddyMatch.bulkBuild([
   {
     requesterId: 1,
     receiverId: 2,
@@ -229,4 +229,4 @@ const buddyMatches: IBuddyMatch[] = [
     receiverId: 2,
     status: BuddyStatus.Accepted,
   },
-];
+]);

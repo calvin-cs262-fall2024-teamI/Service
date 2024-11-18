@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { ApiResponse } from "@/utils/responseWrapper";
 
 export const errorHandler = (
   err: Error,
@@ -8,8 +9,5 @@ export const errorHandler = (
 ) => {
   console.error(err.stack);
 
-  res.status(500).json({
-    message: "Something went wrong!",
-    error: process.env.NODE_ENV === "development" ? err.message : undefined,
-  });
+  res.status(500).json(ApiResponse.error(err.message));
 };
