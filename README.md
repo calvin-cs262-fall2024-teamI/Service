@@ -10,7 +10,11 @@ This is the backend service for [SwoleMate](https://github.com/calvin-cs262-fall
 
 ### Default Domain
 
-[swolemate-service.azurewebsites.net](swolemate-service.azurewebsites.net)
+<https://swolemate-service.azurewebsites.net/>
+
+### API Documentation
+
+[API Documentation and route examples](./API.md)
 
 ### Setup
 
@@ -30,7 +34,3 @@ npm run script <script-name> # e.g. scripts/xxx.ts
 ```bash
 npm run dev
 ```
-
-### API Documentation
-
-[API Documentation](./API.md)

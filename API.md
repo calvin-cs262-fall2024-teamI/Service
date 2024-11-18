@@ -2,9 +2,9 @@
 
 ### Access the API
 
-[swolemate-service.azurewebsites.net/api](swolemate-service.azurewebsites.net/api)
+<https://swolemate-service.azurewebsites.net/api/>
 
-Example usage: **swolemate-service.azurewebsites.net/api/users** retrieves all users.
+Example usage: <https://swolemate-service.azurewebsites.net/api/> retrieves all users.
 
 ### Routes of the API
 
