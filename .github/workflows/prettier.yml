@@ -1,0 +1,35 @@
+name: Prettier Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  format:
+    name: Run Prettier
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Set up Node.js (latest version)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "lts/*" # Use the latest LTS Node.js version
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # confirm the node.js version being used
+      - name: Verify Node.js version
+        run: node -v
+
+      # Run Prettier check.
+      # --check: Just checks if the files are properly formatted. It does not change any files.
+      - name: Run Prettier Check
+        run: npm run format:check
