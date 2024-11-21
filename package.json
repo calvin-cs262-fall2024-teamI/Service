@@ -10,7 +10,7 @@
     "script": "ts-node -r tsconfig-paths/register",
     "test": "jest --detectOpenHandles",
     "lint": "eslint .",
-    "format:check": "prettier --check ."
+    "format:check": "npx prettier . --check"
   },
   "license": "ISC",
   "dependencies": {
