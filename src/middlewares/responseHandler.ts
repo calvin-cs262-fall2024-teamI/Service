@@ -4,7 +4,7 @@ import { ApiResponse } from "@/utils/responseWrapper";
 export const responseHandler = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   // TODO: based on status code, return different format
   // Extend response object

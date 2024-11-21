@@ -33,7 +33,7 @@ interface CrudOptions {
 
 export function createCrudRouter(
   Model: ModelStatic<any>,
-  options: CrudOptions = {}
+  options: CrudOptions = {},
 ) {
   const router = Router();
   const {
@@ -65,13 +65,13 @@ export function createCrudRouter(
         const page = parseInt(req.query.page as string) || 1;
         const limit = Math.min(
           parseInt(req.query.limit as string) || pagination.defaultLimit,
-          pagination.maxLimit
+          pagination.maxLimit,
         );
         const offset = (page - 1) * limit;
 
         // build filter conditions
         const where: any = {};
-        allowedFilters.forEach(filter => {
+        allowedFilters.forEach((filter) => {
           if (req.query[filter]) {
             where[filter] = req.query[filter];
           }
@@ -102,9 +102,9 @@ export function createCrudRouter(
             limit,
             totalPages: Math.ceil(count / limit),
             totalItems: count,
-          })
+          }),
         );
-      })
+      }),
     );
   }
   // node_modules/sequelize/src/dialects/postgres/query.js
@@ -121,13 +121,13 @@ export function createCrudRouter(
           if (error instanceof UniqueConstraintError) {
             throw new Error(
               Object.values(error.errors)
-                .map(e => e.message)
-                .join(", ")
+                .map((e) => e.message)
+                .join(", "),
             );
           }
           throw error;
         }
-      })
+      }),
     );
   }
 
@@ -143,7 +143,7 @@ export function createCrudRouter(
           return;
         }
         res.json(item);
-      })
+      }),
     );
   }
 
@@ -159,7 +159,7 @@ export function createCrudRouter(
         });
         if (!item) throw new Error("Resource not found");
         res.json(item);
-      })
+      }),
     );
   }
 
@@ -175,7 +175,7 @@ export function createCrudRouter(
           return;
         }
         res.status(204).send();
-      })
+      }),
     );
   }
 

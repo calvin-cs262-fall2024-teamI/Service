@@ -8,7 +8,7 @@ export class ApiResponse<D, M> {
     success: boolean,
     data: D | null,
     msg: string,
-    meta: M | null = null
+    meta: M | null = null,
   ) {
     this.success = success;
     this.data = data;
@@ -16,11 +16,7 @@ export class ApiResponse<D, M> {
     this.meta = meta;
   }
 
-  static success<D, M>(
-    data: D,
-    msg = "Success",
-    meta: M | null = null
-  ) {
+  static success<D, M>(data: D, msg = "Success", meta: M | null = null) {
     return new ApiResponse(true, data, msg, meta);
   }
 

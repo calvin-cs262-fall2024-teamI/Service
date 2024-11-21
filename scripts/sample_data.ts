@@ -74,7 +74,7 @@ export const userPreferences = UserPreference.bulkBuild([
     .map((_, i) => ({
       userId: i + 6,
       preferredExperienceLevel: faker.helpers.arrayElement(
-        Object.values(ExperienceLevel)
+        Object.values(ExperienceLevel),
       ),
     })),
 ]);

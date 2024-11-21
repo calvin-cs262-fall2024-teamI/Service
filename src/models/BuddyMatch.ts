@@ -54,5 +54,5 @@ BuddyMatch.init(
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   },
-  { sequelize, tableName: "buddymatch" }
+  { sequelize, tableName: "buddymatch" },
 );

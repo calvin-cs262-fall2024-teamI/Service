@@ -44,7 +44,7 @@ authRouter.post("/refresh", async (req: Request, res: Response) => {
 
   const decoded = jwt.verify(
     refreshToken,
-    process.env.JWT_REFRESH_SECRET!
+    process.env.JWT_REFRESH_SECRET!,
   ) as JwtPayload;
 
   const user = await User.findByPk(decoded.id);
@@ -62,7 +62,7 @@ authRouter.post("/refresh", async (req: Request, res: Response) => {
 });
 
 const generateTokens = (
-  user: User
+  user: User,
 ): { accessToken: string; refreshToken: string } => {
   const payload: JwtPayloadRaw = {
     id: user.id,

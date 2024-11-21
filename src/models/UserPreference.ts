@@ -68,5 +68,5 @@ UserPreference.init(
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   },
-  { sequelize, tableName: "userpreference" }
+  { sequelize, tableName: "userpreference" },
 );

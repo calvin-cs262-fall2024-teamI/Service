@@ -72,5 +72,5 @@ Review.init(
         fields: ["reviewedId"],
       },
     ],
-  }
+  },
 );

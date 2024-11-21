@@ -12,10 +12,10 @@ export const RouterWithAsyncHandler = () => {
 
   const methods = ["get", "post", "put", "delete"] as const;
 
-  methods.forEach(method => {
+  methods.forEach((method) => {
     const original = router[method].bind(router);
     router[method] = function (path: any, ...handlers: any[]) {
-      const wrappedHandlers = handlers.map(handler => asyncHandler(handler));
+      const wrappedHandlers = handlers.map((handler) => asyncHandler(handler));
       return original(path, ...wrappedHandlers);
     };
   });

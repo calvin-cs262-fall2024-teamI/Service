@@ -10,7 +10,7 @@ import {
 } from "./sample_data";
 
 const saveRecords = async (records: any[]) => {
-  await sequelize.transaction(async transaction => {
+  await sequelize.transaction(async (transaction) => {
     for (const record of records) {
       await record.save({ transaction });
     }
