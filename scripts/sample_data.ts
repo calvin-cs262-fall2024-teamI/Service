@@ -173,7 +173,7 @@ export const reviews = Review.bulkBuild([
   ...Array(20)
     .fill(null)
     .map(() => {
-      let reviewerId = faker.number.int({ min: 1, max: 14 });
+      const reviewerId = faker.number.int({ min: 1, max: 14 });
       let reviewedId = faker.number.int({ min: 1, max: 15 });
       if (reviewedId === reviewerId) reviewedId++;
       return {
@@ -201,7 +201,7 @@ export const workouts = Workout.bulkBuild([
   ...Array(20)
     .fill(null)
     .map(() => {
-      let creatorId = faker.number.int({ min: 1, max: 14 });
+      const creatorId = faker.number.int({ min: 1, max: 14 });
       let partnerId = faker.number.int({ min: 1, max: 15 });
       if (creatorId === partnerId) partnerId++;
       return {

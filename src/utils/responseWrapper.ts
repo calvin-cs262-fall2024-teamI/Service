@@ -18,7 +18,7 @@ export class ApiResponse<D, M> {
 
   static success<D, M>(
     data: D,
-    msg: string = "Success",
+    msg = "Success",
     meta: M | null = null
   ) {
     return new ApiResponse(true, data, msg, meta);
