@@ -8,6 +8,14 @@ This is the backend service for [SwoleMate](https://github.com/calvin-cs262-fall
 
 [Sample Data](./scripts/sample_data.ts)
 
+### Default Domain
+
+<https://swolemate-service.azurewebsites.net/>
+
+### API Documentation
+
+[API Documentation and route examples](./API.md)
+
 ### Setup
 
 1. Install dependencies `npm install`
@@ -26,7 +34,3 @@ npm run script <script-name> # e.g. scripts/xxx.ts
 ```bash
 npm run dev
 ```
-
-### API Documentation
-
-[API Documentation](./API.md)
