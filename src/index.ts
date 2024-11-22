@@ -25,4 +25,7 @@ async function startServer() {
   }
 }
 
-startServer();
+startServer().catch((error) => {
+  console.error("starting server failed:", error);
+  process.exit(1); // Ensure the process exits with failure if the server fails to start
+});

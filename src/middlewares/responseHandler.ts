@@ -9,7 +9,7 @@ export const responseHandler = (
   // TODO: based on status code, return different format
   // Extend response object
   const originalJson = res.json;
-  res.json = function (body: any) {
+  res.json = function (body: unknown) {
     // If response is already in ApiResponse format, return directly
     if (body instanceof ApiResponse) {
       return originalJson.call(this, body);
