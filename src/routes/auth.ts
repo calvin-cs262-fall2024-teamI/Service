@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment*/
 import { User } from "@/models/User";
 import { JwtPayload, JwtPayloadRaw } from "@/types";
 import { RouterWithAsyncHandler } from "@/utils";
@@ -7,13 +8,17 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 const authRouter = RouterWithAsyncHandler();
+interface LoginRequest {
+  emailAddress: string;
+  password: string;
+}
 
 // Login route
 authRouter.post("/login", async (req: Request, res: Response) => {
-  const { emailAddress, password } = req.body;
+  const { emailAddress, password }: LoginRequest = req.body;
 
   // Find user
-  const user = await User.findOne({ where: { emailAddress } });
+  const user = await User.findOne<User>({ where: { emailAddress } });
   if (!user) throw new Error("Invalid credential, user not found");
 
   // Check password
@@ -42,9 +47,13 @@ authRouter.post("/refresh", async (req: Request, res: Response) => {
 
   if (!refreshToken) throw new Error("Refresh token is required");
 
+  if (typeof refreshToken !== "string") {
+    throw new Error("Invalid token format");
+  }
+
   const decoded = jwt.verify(
     refreshToken,
-    process.env.JWT_REFRESH_SECRET!
+    process.env.JWT_REFRESH_SECRET!,
   ) as JwtPayload;
 
   const user = await User.findByPk(decoded.id);
@@ -62,7 +71,7 @@ authRouter.post("/refresh", async (req: Request, res: Response) => {
 });
 
 const generateTokens = (
-  user: User
+  user: User,
 ): { accessToken: string; refreshToken: string } => {
   const payload: JwtPayloadRaw = {
     id: user.id,

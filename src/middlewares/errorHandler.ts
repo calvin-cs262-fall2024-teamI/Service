@@ -1,11 +1,12 @@
-import { Request, Response, NextFunction } from "express";
+import { Request } from "express";
+import { Response } from "express";
 import { ApiResponse } from "@/utils/responseWrapper";
 
 export const errorHandler = (
   err: Error,
   req: Request,
   res: Response,
-  next: NextFunction
+  // next: NextFunction,
 ) => {
   console.error(err.stack);
 
