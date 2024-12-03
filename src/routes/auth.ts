@@ -6,11 +6,27 @@ import { ApiResponse } from "@/utils/responseWrapper";
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { ExperienceLevel, Gender } from "@/types/enums";
 
 const authRouter = RouterWithAsyncHandler();
 interface LoginRequest {
   emailAddress: string;
   password: string;
+}
+interface RegisterRequest {
+  emailAddress: string;
+  password: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  age: number;
+  height_feet: number;
+  height_inches: number;
+  weight: number;
+  gender: Gender | null;
+  profilePictureUrl: string | null;
+  experienceLevel: ExperienceLevel | null;
+  bio: string | null;
 }
 
 // Login route
@@ -40,6 +56,66 @@ authRouter.post("/login", async (req: Request, res: Response) => {
     accessToken,
     refreshToken,
   });
+});
+// register route
+authRouter.post("/register", async (req: Request, res: Response) => {
+  const {
+    emailAddress,
+    password,
+    username,
+    firstName,
+    lastName,
+    age,
+    height_feet,
+    height_inches,
+    weight,
+    gender,
+    profilePictureUrl,
+    experienceLevel,
+    bio,
+  }: RegisterRequest = req.body;
+  //check if  email or username already exists
+  const existingEmail = await User.findOne({ where: { emailAddress } });
+  const existingUsername = await User.findOne({ where: { username } });
+  if (existingEmail) {
+    res.status(400).json(ApiResponse.error("email address is already in use"));
+    return;
+  }
+  if (existingUsername) {
+    res.status(400).json(ApiResponse.error("username is already in use"));
+    return;
+  }
+  try {
+    //create a new user model
+    const newUser = await User.create({
+      emailAddress,
+      username,
+      firstName,
+      lastName,
+      age,
+      height_feet,
+      height_inches,
+      weight,
+      gender,
+      profilePictureUrl,
+      experienceLevel,
+      bio,
+      passwordHash: password, // Plain password passed, hashing handled by the model's hook
+    });
+    //generate tokens
+    const { accessToken, refreshToken } = generateTokens(newUser);
+    //send response, which can be used to login in the client
+    res.status(201).json({
+      id: newUser.id,
+      username: newUser.username,
+      emailAddress: newUser.emailAddress,
+      accessToken,
+      refreshToken,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(ApiResponse.error("Error registering user"));
+  }
 });
 
 authRouter.post("/refresh", async (req: Request, res: Response) => {
