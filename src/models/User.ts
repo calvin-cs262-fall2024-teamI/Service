@@ -21,7 +21,7 @@ export class User extends Model<
   declare age: number;
   declare height_feet: number;
   declare height_inches: number;
-  declare weight: CreationOptional<string>;
+  declare weight: CreationOptional<number>;
   declare passwordHash: string;
   declare gender: CreationOptional<Gender | null>;
   declare profilePictureUrl: CreationOptional<string | null>;
