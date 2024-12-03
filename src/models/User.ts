@@ -16,6 +16,12 @@ export class User extends Model<
   declare id: CreationOptional<number>;
   declare emailAddress: string;
   declare username: string;
+  declare firstName: string;
+  declare lastName: string;
+  declare age: number;
+  declare height_feet: number;
+  declare height_inches: number;
+  declare weight: CreationOptional<string>;
   declare passwordHash: string;
   declare gender: CreationOptional<Gender | null>;
   declare profilePictureUrl: CreationOptional<string | null>;
@@ -45,6 +51,32 @@ User.init(
     },
     username: {
       type: DataTypes.STRING(64),
+      allowNull: false,
+    },
+    firstName: {
+      type: DataTypes.STRING(64),
+      allowNull: false,
+    },
+    lastName: {
+      type: DataTypes.STRING(64),
+      allowNull: false,
+    },
+    height_feet: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    height_inches: {
+      type: DataTypes.INTEGER,
+
+      allowNull: false,
+    },
+    weight: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    age: {
+      type: DataTypes.INTEGER,
+
       allowNull: false,
     },
     passwordHash: {

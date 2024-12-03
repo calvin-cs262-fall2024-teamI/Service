@@ -32,7 +32,7 @@ authRouter.post("/login", async (req: Request, res: Response) => {
   const { accessToken, refreshToken } = generateTokens(user);
 
   // You may want to store refresh token in database here
-
+  //send json response
   res.json({
     id,
     username,
