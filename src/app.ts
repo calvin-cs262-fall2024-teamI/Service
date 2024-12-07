@@ -7,6 +7,8 @@ import helmet from "helmet";
 
 const app = express();
 
+//Configure Azure Blob Storage
+
 // middleware
 app.use(cors());
 app.use(helmet());

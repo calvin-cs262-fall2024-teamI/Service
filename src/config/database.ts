@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import { Sequelize } from "sequelize";
-
+import { BlobServiceClient } from "@azure/storage-blob";
+import multer from "multer";
 dotenv.config();
 
 const sequelize = new Sequelize({
@@ -18,4 +19,15 @@ const sequelize = new Sequelize({
   },
 });
 
-export { sequelize };
+//configure Azure Blob storage
+const blobServiceClient = BlobServiceClient.fromConnectionString(
+  process.env.AZURE_STORAGE_CONNECTION_STRING!,
+);
+const containerClient = blobServiceClient.getContainerClient(
+  process.env.CONTAINER_NAME!,
+);
+
+//Set Up Multer for File Upload Handling
+const uploadFile = multer({ storage: multer.memoryStorage() });
+
+export { sequelize, blobServiceClient, containerClient, uploadFile };

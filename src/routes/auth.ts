@@ -7,7 +7,12 @@ import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { ExperienceLevel, Gender } from "@/types/enums";
-
+import { asyncHandler } from "@/utils";
+import {
+  uploadFile,
+  containerClient,
+  // blobServiceClient,
+} from "@/config/database";
 const authRouter = RouterWithAsyncHandler();
 interface LoginRequest {
   emailAddress: string;
@@ -117,7 +122,53 @@ authRouter.post("/register", async (req: Request, res: Response) => {
     res.status(500).json(ApiResponse.error("Error registering user"));
   }
 });
+//upload Profile Picture route
+authRouter.post(
+  "/upload-profile-picture/:id",
+  uploadFile.single("profilePicture"), // Middleware to handle single file upload with key "profilePicture"
+  asyncHandler(async (req: Request, res: Response) => {
+    // Extract the userId parameter from the request URL
+    const { id } = req.params;
+    const file = req.file;
 
+    if (!file) {
+      return res.status(400).json(ApiResponse.error("No file uploaded."));
+    }
+
+    try {
+      // Generate a unique blob name using userId, timestamp, and the original file name
+      const blobName = `${id}-${Date.now()}-${file.originalname}`;
+      // Create a BlockBlobClient to interact with the Azure Blob Storage for the specific blob
+      const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+      // Upload the file to Azure Blob Storage
+      await blockBlobClient.upload(file.buffer, file.buffer.length, {
+        blobHTTPHeaders: { blobContentType: file.mimetype },
+      });
+
+      const blobUrl = blockBlobClient.url;
+
+      // Retrieve the user from the database using the provided userId
+      const user = await User.findByPk(id);
+      if (!user) {
+        return res.status(404).json(ApiResponse.error("User not found."));
+      }
+      // Update the user's profilePictureUrl field in the database
+      user.profilePictureUrl = blobUrl;
+      await user.save();
+
+      res.status(200).json({
+        message: "Profile picture uploaded successfully.",
+        profilePictureUrl: blobUrl,
+      });
+    } catch (error) {
+      console.error("Error uploading profile picture:", error);
+      res
+        .status(500)
+        .json(ApiResponse.error("Error uploading profile picture."));
+    }
+  }),
+);
 authRouter.post("/refresh", async (req: Request, res: Response) => {
   const { refreshToken } = req.body;
 
