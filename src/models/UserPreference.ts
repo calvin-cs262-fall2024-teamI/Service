@@ -18,6 +18,7 @@ export class UserPreference extends Model<
   declare preferredGender: CreationOptional<Gender | null>;
   declare preferredExperienceLevel: CreationOptional<ExperienceLevel | null>;
   declare preferredWorkoutTime: CreationOptional<string[]>;
+  declare preferredWorkoutType: CreationOptional<string[]>;
   declare preferredDays: CreationOptional<DayOfWeek[]>;
   declare maxBudget: CreationOptional<number>;
   declare goals: CreationOptional<string[]>;
