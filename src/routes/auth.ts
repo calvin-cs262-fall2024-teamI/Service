@@ -127,19 +127,31 @@ authRouter.post(
   "/upload-profile-picture/:id",
   uploadFile.single("profilePicture"), // Middleware to handle single file upload with key "profilePicture"
   asyncHandler(async (req: Request, res: Response) => {
-    // Extract the userId parameter from the request URL
     const { id } = req.params;
     const file = req.file;
 
+    // Debugging: Log the incoming file and request body
+    console.log("Incoming file:", file);
+    console.log("Request Body:", req.body);
+
     if (!file) {
+      console.error("No file uploaded.");
       return res.status(400).json(ApiResponse.error("No file uploaded."));
     }
 
     try {
+      // Log the file details
+      console.log("File details:");
+      console.log(`Original Name: ${file.originalname}`);
+      console.log(`MIME Type: ${file.mimetype}`);
+      console.log(`File Size: ${file.size} bytes`);
+
       // Generate a unique blob name using userId, timestamp, and the original file name
       const blobName = `${id}-${Date.now()}-${file.originalname}`;
-      // Create a BlockBlobClient to interact with the Azure Blob Storage for the specific blob
       const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+      // Debugging: Log the blob upload process
+      console.log("Uploading to Azure Blob Storage...");
 
       // Upload the file to Azure Blob Storage
       await blockBlobClient.upload(file.buffer, file.buffer.length, {
@@ -147,15 +159,23 @@ authRouter.post(
       });
 
       const blobUrl = blockBlobClient.url;
+      console.log("File uploaded successfully, Blob URL:", blobUrl);
 
       // Retrieve the user from the database using the provided userId
       const user = await User.findByPk(id);
       if (!user) {
+        console.error("User not found.");
         return res.status(404).json(ApiResponse.error("User not found."));
       }
+
+      // Debugging: Log the user profile update
+      console.log("Updating user profile with new profile picture URL...");
+
       // Update the user's profilePictureUrl field in the database
       user.profilePictureUrl = blobUrl;
       await user.save();
+
+      console.log("Profile picture updated successfully.");
 
       res.status(200).json({
         message: "Profile picture uploaded successfully.",
@@ -169,6 +189,7 @@ authRouter.post(
     }
   }),
 );
+
 authRouter.post("/refresh", async (req: Request, res: Response) => {
   const { refreshToken } = req.body;
 
