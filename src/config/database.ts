@@ -28,6 +28,6 @@ const containerClient = blobServiceClient.getContainerClient(
 );
 
 //Set Up Multer for File Upload Handling
-const fileUpload = multer({ storage: multer.memoryStorage() });
+const uploadFile = multer({ storage: multer.memoryStorage() });
 
-export { sequelize, blobServiceClient, containerClient, fileUpload };
+export { sequelize, blobServiceClient, containerClient, uploadFile };
