@@ -19,6 +19,7 @@ export class UserPreference extends Model<
   declare preferredExperienceLevel: CreationOptional<ExperienceLevel | null>;
   declare preferredWorkoutTime: CreationOptional<string[]>;
   declare preferredWorkoutType: CreationOptional<string[]>;
+  declare preferredGym: CreationOptional<string[]>;
   declare preferredDays: CreationOptional<DayOfWeek[]>;
   declare maxBudget: CreationOptional<number>;
   declare goals: CreationOptional<string[]>;
@@ -60,6 +61,14 @@ UserPreference.init(
     },
     maxBudget: {
       type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+    },
+    preferredGym: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: true,
+    },
+    preferredWorkoutType: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: true,
     },
     goals: {

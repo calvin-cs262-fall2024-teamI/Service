@@ -23,7 +23,6 @@ export class User extends Model<
   declare height_inches: number;
   declare weight: CreationOptional<number>;
   declare passwordHash: string;
-  declare gym: CreationOptional<string>;
   declare city: CreationOptional<string>;
   declare gender: CreationOptional<Gender | null>;
   declare profilePictureUrl: CreationOptional<string | null>;
@@ -63,10 +62,7 @@ User.init(
       type: DataTypes.STRING(64),
       allowNull: false,
     },
-    gym: {
-      type: DataTypes.STRING(64),
-      allowNull: true,
-    },
+
     city: {
       type: DataTypes.STRING(64),
       allowNull: true,
