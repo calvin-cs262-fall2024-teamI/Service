@@ -31,6 +31,8 @@ export const users = User.bulkBuild([
     bio: "Enjoys lifting weights and doing HIIT workouts.",
     isTrainer: false,
     cost: 0,
+    city: "New York",
+    profilePictureUrl: null,
   },
   {
     username: "jeton",
@@ -47,6 +49,8 @@ export const users = User.bulkBuild([
     bio: "Strength training enthusiast. Always aiming to lift heavier.",
     isTrainer: true,
     cost: 50,
+    city: "Grand Rapids",
+    profilePictureUrl: null,
   },
   {
     username: "alim",
@@ -63,6 +67,8 @@ export const users = User.bulkBuild([
     bio: "Fitness junkie with a passion for bodybuilding.",
     isTrainer: false,
     cost: 0,
+    city: "Chicago",
+    profilePictureUrl: null,
   },
   {
     username: "allison",
@@ -79,6 +85,8 @@ export const users = User.bulkBuild([
     bio: "Loves yoga and Pilates. Looking to build strength.",
     isTrainer: false,
     cost: 0,
+    city: "Los Angeles",
+    profilePictureUrl: null,
   },
   {
     username: "madi",
@@ -95,6 +103,8 @@ export const users = User.bulkBuild([
     bio: "Just getting into fitness. Excited to start training!",
     isTrainer: false,
     cost: 0,
+    city: "San Francisco",
+    profilePictureUrl: null,
   },
   ...Array(10)
     .fill(null)
@@ -117,6 +127,8 @@ export const users = User.bulkBuild([
         bio: faker.lorem.sentence(),
         isTrainer: faker.datatype.boolean(),
         cost: 0,
+        city: faker.address.city(),
+        profilePictureUrl: null,
       };
     }),
 ]);
@@ -293,13 +305,65 @@ export const buddyMatches = BuddyMatch.bulkBuild([
     status: BuddyStatus.Accepted,
   },
   {
+    requesterId: 1,
+    receiverId: 3,
+    status: BuddyStatus.Accepted,
+  },
+  {
+    requesterId: 1,
+    receiverId: 4,
+    status: BuddyStatus.Accepted,
+  },
+  {
+    requesterId: 1,
+    receiverId: 5,
+    status: BuddyStatus.Accepted,
+  },
+  {
     requesterId: 2,
-    receiverId: 1,
+    receiverId: 6,
+    status: BuddyStatus.Accepted,
+  },
+  {
+    requesterId: 2,
+    receiverId: 7,
     status: BuddyStatus.Accepted,
   },
   {
     requesterId: 3,
-    receiverId: 2,
+    receiverId: 8,
+    status: BuddyStatus.Pending,
+  },
+  {
+    requesterId: 3,
+    receiverId: 9,
+    status: BuddyStatus.Pending,
+  },
+  {
+    requesterId: 4,
+    receiverId: 10,
     status: BuddyStatus.Accepted,
   },
+  {
+    requesterId: 4,
+    receiverId: 11,
+    status: BuddyStatus.Pending,
+  },
+  {
+    requesterId: 5,
+    receiverId: 12,
+    status: BuddyStatus.Accepted,
+  },
+  ...Array(20)
+    .fill(null)
+    .map(() => {
+      const requesterId = faker.number.int({ min: 1, max: 14 });
+      let receiverId = faker.number.int({ min: 1, max: 15 });
+      if (requesterId === receiverId) receiverId++;
+      return {
+        requesterId,
+        receiverId,
+        status: faker.helpers.arrayElement(Object.values(BuddyStatus)),
+      };
+    }),
 ]);

@@ -22,7 +22,7 @@ export class UserPreference extends Model<
   declare userId: number;
   declare preferredGender: CreationOptional<Gender | null>;
   declare preferredExperienceLevel: CreationOptional<ExperienceLevel | null>;
-  declare preferredWorkoutTime: CreationOptional<WorkoutTimes | null>;
+  declare preferredWorkoutTimes: CreationOptional<WorkoutTimes[] | null>;
   declare preferredWorkoutType: CreationOptional<string[]>;
   declare preferredGym: CreationOptional<string[]>;
   declare preferredDays: CreationOptional<DayOfWeek[]>;
@@ -56,7 +56,7 @@ UserPreference.init(
       type: DataTypes.ENUM(...Object.values(ExperienceLevel)),
       allowNull: true,
     },
-    preferredWorkoutTime: {
+    preferredWorkoutTimes: {
       type: DataTypes.ARRAY(DataTypes.ENUM(...Object.values(WorkoutTimes))),
       allowNull: true,
     },
