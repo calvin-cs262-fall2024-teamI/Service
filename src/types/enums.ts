@@ -31,3 +31,8 @@ export enum DayOfWeek {
   Saturday = "Saturday",
   Sunday = "Sunday",
 }
+export enum WorkoutTimes {
+  Morning = "Morning",
+  Afternoon = "Afternoon",
+  Evening = "Evening",
+}

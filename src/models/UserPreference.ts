@@ -1,5 +1,10 @@
 import { sequelize } from "@/config/database";
-import { DayOfWeek, ExperienceLevel, Gender } from "@/types/enums";
+import {
+  DayOfWeek,
+  ExperienceLevel,
+  Gender,
+  WorkoutTimes,
+} from "@/types/enums";
 import {
   CreationOptional,
   DataTypes,
@@ -17,7 +22,9 @@ export class UserPreference extends Model<
   declare userId: number;
   declare preferredGender: CreationOptional<Gender | null>;
   declare preferredExperienceLevel: CreationOptional<ExperienceLevel | null>;
-  declare preferredWorkoutTime: CreationOptional<string[]>;
+  declare preferredWorkoutTime: CreationOptional<WorkoutTimes | null>;
+  declare preferredWorkoutType: CreationOptional<string[]>;
+  declare preferredGym: CreationOptional<string[]>;
   declare preferredDays: CreationOptional<DayOfWeek[]>;
   declare maxBudget: CreationOptional<number>;
   declare goals: CreationOptional<string[]>;
@@ -50,7 +57,7 @@ UserPreference.init(
       allowNull: true,
     },
     preferredWorkoutTime: {
-      type: DataTypes.ARRAY(DataTypes.TIME),
+      type: DataTypes.ARRAY(DataTypes.ENUM(...Object.values(WorkoutTimes))),
       allowNull: true,
     },
     preferredDays: {
@@ -59,6 +66,14 @@ UserPreference.init(
     },
     maxBudget: {
       type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+    },
+    preferredGym: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: true,
+    },
+    preferredWorkoutType: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: true,
     },
     goals: {
