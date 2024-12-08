@@ -25,6 +25,7 @@ interface RegisterRequest {
   firstName: string;
   lastName: string;
   age: number;
+  city: string;
   height_feet: number;
   height_inches: number;
   weight: number;
@@ -71,6 +72,7 @@ authRouter.post("/register", async (req: Request, res: Response) => {
     firstName,
     lastName,
     age,
+    city,
     height_feet,
     height_inches,
     weight,
@@ -101,6 +103,7 @@ authRouter.post("/register", async (req: Request, res: Response) => {
       height_feet,
       height_inches,
       weight,
+      city,
       gender,
       profilePictureUrl,
       experienceLevel,
