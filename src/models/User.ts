@@ -21,9 +21,9 @@ export class User extends Model<
   declare age: number;
   declare height_feet: number;
   declare height_inches: number;
-  declare weight: CreationOptional<number>;
+  declare weight: number;
   declare passwordHash: string;
-  declare city: CreationOptional<string>;
+  declare city: string;
   declare gender: CreationOptional<Gender | null>;
   declare profilePictureUrl: CreationOptional<string | null>;
   declare experienceLevel: CreationOptional<ExperienceLevel | null>;
@@ -65,7 +65,7 @@ User.init(
 
     city: {
       type: DataTypes.STRING(64),
-      allowNull: true,
+      allowNull: false,
     },
     height_feet: {
       type: DataTypes.INTEGER,

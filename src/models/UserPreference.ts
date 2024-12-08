@@ -21,10 +21,10 @@ export class UserPreference extends Model<
   declare id: CreationOptional<number>;
   declare userId: number;
   declare preferredGender: CreationOptional<Gender | null>;
-  declare preferredExperienceLevel: CreationOptional<ExperienceLevel | null>;
+  declare preferredExperienceLevels: CreationOptional<ExperienceLevel[] | null>;
   declare preferredWorkoutTimes: CreationOptional<WorkoutTimes[] | null>;
-  declare preferredWorkoutType: CreationOptional<string[]>;
-  declare preferredGym: CreationOptional<string[]>;
+  declare preferredWorkoutTypes: CreationOptional<string[]>;
+  declare preferredGyms: CreationOptional<string[]>;
   declare preferredDays: CreationOptional<DayOfWeek[]>;
   declare maxBudget: CreationOptional<number>;
   declare goals: CreationOptional<string[]>;
@@ -52,8 +52,8 @@ UserPreference.init(
       type: DataTypes.ENUM(...Object.values(Gender)),
       allowNull: true,
     },
-    preferredExperienceLevel: {
-      type: DataTypes.ENUM(...Object.values(ExperienceLevel)),
+    preferredExperienceLevels: {
+      type: DataTypes.ARRAY(DataTypes.ENUM(...Object.values(ExperienceLevel))),
       allowNull: true,
     },
     preferredWorkoutTimes: {
@@ -68,11 +68,11 @@ UserPreference.init(
       type: DataTypes.DECIMAL(10, 2),
       allowNull: true,
     },
-    preferredGym: {
+    preferredGyms: {
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: true,
     },
-    preferredWorkoutType: {
+    preferredWorkoutTypes: {
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: true,
     },
