@@ -60,10 +60,10 @@ ChatRoom.init(
       validUserIds() {
         if ((this.user1Id as number) >= (this.user2Id as number)) {
           throw new Error(
-            "user1Id must be less than user2Id and cannot be equal",
+            "user1Id must be less than user2Id and cannot be equal"
           );
         }
       },
     },
-  },
+  }
 );

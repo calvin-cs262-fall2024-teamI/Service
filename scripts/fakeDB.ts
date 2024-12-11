@@ -27,9 +27,9 @@ const saveRecords = async (
     | Review
     | Workout
     | BuddyMatch
-  )[],
+  )[]
 ) => {
-  await sequelize.transaction(async (transaction) => {
+  await sequelize.transaction(async transaction => {
     for (const record of records) {
       await record.save({ transaction });
     }
@@ -51,6 +51,6 @@ async function main() {
   }
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error("Main function failed:", error);
 });

@@ -64,5 +64,5 @@ ChatMessage.init(
         fields: ["senderId"],
       },
     ],
-  },
+  }
 );
