@@ -79,5 +79,5 @@ Workout.init(
         fields: ["partnerId"],
       },
     ],
-  },
+  }
 );

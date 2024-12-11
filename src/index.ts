@@ -23,11 +23,11 @@ async function startServer() {
     const exists = await containerClient.exists();
     if (exists) {
       console.log(
-        "Azure Blob Storage is successfully connected, and container exists.",
+        "Azure Blob Storage is successfully connected, and container exists."
       ); //TODO: REMOVE
     } else {
       throw new Error(
-        `Container '${process.env.CONTAINER_NAME}' does not exist.`,
+        `Container '${process.env.CONTAINER_NAME}' does not exist.`
       ); // TODO: REMOVE
     }
   } catch (error) {
@@ -45,7 +45,7 @@ async function startServer() {
   }
 }
 
-startServer().catch((error) => {
+startServer().catch(error => {
   console.error("starting server failed:", error);
   process.exit(1); // Ensure the process exits with failure if the server fails to start
 });

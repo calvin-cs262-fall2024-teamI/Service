@@ -3,12 +3,7 @@
     "transpileOnly": true,
     "files": true
   },
-  "include": [
-    "src/**/*",
-    "scripts/**/*",
-    "jest.config.js",
-    "eslint.config.mjs"
-  ],
+  "include": ["src/**/*", "scripts/**/*", "eslint.config.mjs"],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
 

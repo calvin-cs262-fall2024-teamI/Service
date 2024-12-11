@@ -8,7 +8,7 @@ export class ApiResponse<D, M> {
     success: boolean,
     data: D | null,
     msg: string,
-    meta: M | null = null,
+    meta: M | null = null
   ) {
     this.success = success;
     this.data = data;

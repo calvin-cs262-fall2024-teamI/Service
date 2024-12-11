@@ -135,5 +135,5 @@ User.init(
         fields: ["username"],
       },
     ],
-  },
+  }
 );

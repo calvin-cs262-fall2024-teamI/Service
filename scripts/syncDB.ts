@@ -20,7 +20,7 @@ async function syncDatabase() {
 }
 
 // Await the promise here
-syncDatabase().catch((error) => {
+syncDatabase().catch(error => {
   console.error("syncDatabase failed:", error);
   process.exit(1);
 });
