@@ -109,7 +109,7 @@ export const users = User.bulkBuild([
   ...Array(10)
     .fill(null)
     .map(() => {
-      const username = faker.internet.userName();
+      const username = faker.internet.username();
       return {
         username,
         passwordHash: "password123",
@@ -122,7 +122,7 @@ export const users = User.bulkBuild([
         weight: faker.number.int({ min: 120, max: 250 }),
         gender: faker.helpers.arrayElement(Object.values(Gender)),
         experienceLevel: faker.helpers.arrayElement(
-          Object.values(ExperienceLevel),
+          Object.values(ExperienceLevel)
         ),
         bio: faker.lorem.sentence(),
         isTrainer: faker.datatype.boolean(),
@@ -159,7 +159,7 @@ export const userPreferences = UserPreference.bulkBuild([
     .map((_, i) => ({
       userId: i + 6,
       preferredExperienceLevel: faker.helpers.arrayElement(
-        Object.values(ExperienceLevel),
+        Object.values(ExperienceLevel)
       ),
     })),
 ]);
