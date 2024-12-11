@@ -69,11 +69,13 @@ export function createCrudRouter(
         );
         const offset = (page - 1) * limit;
 
-        // build filter conditions
         const where: any = {};
-        allowedFilters.forEach(filter => {
-          if (req.query[filter]) {
-            where[filter] = req.query[filter];
+        const modelAttributes = Object.keys(Model.getAttributes());
+
+        // Filter based on all available model attributes
+        Object.keys(req.query).forEach(key => {
+          if (modelAttributes.includes(key) && req.query[key] !== undefined) {
+            where[key] = req.query[key];
           }
         });
 
