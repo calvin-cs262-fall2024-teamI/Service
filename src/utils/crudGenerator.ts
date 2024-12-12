@@ -41,7 +41,7 @@ export function createCrudRouter(
     operations = ["create", "read", "update", "delete", "list"],
     pagination = { defaultLimit: 30, maxLimit: 80 },
     allowedFilters = [],
-    allowedSortFields = [],
+    allowedSortFields = ["age", "cost"],
     middleware = {},
     excludeFields = [],
   } = options;
