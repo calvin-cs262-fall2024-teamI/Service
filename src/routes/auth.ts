@@ -192,33 +192,60 @@ authRouter.post(
   })
 );
 
-authRouter.post("/refresh", async (req: Request, res: Response) => {
-  const { refreshToken } = req.body;
+authRouter.post(
+  "/refresh",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { refreshToken }: { refreshToken: string } = req.body;
 
-  if (!refreshToken) throw new Error("Refresh token is required");
+    if (!refreshToken) {
+      return res
+        .status(400)
+        .json(ApiResponse.error("Refresh token is required"));
+    }
 
-  if (typeof refreshToken !== "string") {
-    throw new Error("Invalid token format");
-  }
+    if (typeof refreshToken !== "string") {
+      return res.status(400).json(ApiResponse.error("Invalid token format"));
+    }
 
-  const decoded = jwt.verify(
-    refreshToken,
-    process.env.JWT_REFRESH_SECRET!
-  ) as JwtPayload;
+    try {
+      // Verify the refresh token
+      const decoded = jwt.verify(
+        refreshToken,
+        process.env.JWT_REFRESH_SECRET!
+      ) as JwtPayload;
 
-  const user = await User.findByPk(decoded.id);
-  if (!user) throw new Error("User not found");
+      const user = await User.findByPk(decoded.id);
+      if (!user) {
+        return res.status(404).json(ApiResponse.error("User not found"));
+      }
 
-  const { accessToken, refreshToken: newRefreshToken } = generateTokens(user);
+      const { accessToken, refreshToken: newRefreshToken } =
+        generateTokens(user);
 
-  res.json({
-    id: user.id,
-    username: user.username,
-    emailAddress: user.emailAddress,
-    accessToken,
-    refreshToken: newRefreshToken,
-  });
-});
+      res.json({
+        id: user.id,
+        username: user.username,
+        emailAddress: user.emailAddress,
+        accessToken,
+        refreshToken: newRefreshToken,
+      });
+    } catch (error) {
+      if (error instanceof jwt.TokenExpiredError) {
+        console.error("Refresh token expired:", error);
+        return res
+          .status(401)
+          .json(
+            ApiResponse.error("Refresh token has expired. Please log in again.")
+          );
+      }
+
+      console.error("Token verification error:", error);
+      return res
+        .status(400)
+        .json(ApiResponse.error("Token verification error"));
+    }
+  })
+);
 
 const generateTokens = (
   user: User
