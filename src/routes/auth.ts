@@ -32,6 +32,8 @@ interface RegisterRequest {
   profilePictureUrl: string | null;
   experienceLevel: ExperienceLevel | null;
   bio: string | null;
+  isTrainer: boolean | null;
+  cost: number | null;
 }
 
 // Login route
@@ -79,6 +81,8 @@ authRouter.post("/register", async (req: Request, res: Response) => {
     profilePictureUrl,
     experienceLevel,
     bio,
+    isTrainer,
+    cost,
   }: RegisterRequest = req.body;
   //check if  email or username already exists
   const existingEmail = await User.findOne({ where: { emailAddress } });
@@ -108,6 +112,8 @@ authRouter.post("/register", async (req: Request, res: Response) => {
       experienceLevel,
       bio,
       passwordHash: password, // Plain password passed, hashing handled by the model's hook
+      isTrainer: isTrainer || false,
+      cost: cost || 0,
     });
     //generate tokens
     const { accessToken, refreshToken } = generateTokens(newUser);
