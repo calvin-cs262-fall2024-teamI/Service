@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Application entry point that initializes and starts the Express server.
+ * Handles database connection, Azure storage setup, and server startup.
+ */
+
 import app from "@/app";
 import { sequelize, containerClient } from "@/config/database";
 import { getLocalIP } from "@/utils";
@@ -7,32 +12,36 @@ dotenv.config();
 
 const port = process.env.PORT || 3000;
 
-// start server
+/**
+ * Initializes and starts the server.
+ * Verifies database and Azure Blob Storage connections before starting Express.
+ */
 async function startServer() {
   try {
-    //test database connection
+    // Test database connection
     await sequelize.authenticate();
     console.log("Connection has been established successfully.");
   } catch (error) {
     console.error("Unable to connect to the database:", error);
     process.exit(1);
   }
-  //test azure blob storage connection
+
+  // Test Azure blob storage connection
   try {
     console.log("Checking Azure Blob Storage connection...");
     const exists = await containerClient.exists();
     if (exists) {
       console.log(
         "Azure Blob Storage is successfully connected, and container exists."
-      ); //TODO: REMOVE
+      );
     } else {
       throw new Error(
         `Container '${process.env.CONTAINER_NAME}' does not exist.`
-      ); // TODO: REMOVE
+      );
     }
   } catch (error) {
     console.error("Azure Blob Storage connection test failed:", error);
-    throw error; // Re-throw error for centralized error handling
+    throw error;
   }
 
   try {
@@ -45,7 +54,8 @@ async function startServer() {
   }
 }
 
+// Start the server and handle any startup errors
 startServer().catch(error => {
   console.error("starting server failed:", error);
-  process.exit(1); // Ensure the process exits with failure if the server fails to start
+  process.exit(1);
 });

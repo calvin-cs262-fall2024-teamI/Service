@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Script to populate the database with sample data for development/testing purposes.
+ * This script imports sample data and saves it to the database using Sequelize transactions.
+ */
+
 import { sequelize } from "@/config/database";
 import {
   users,
@@ -18,6 +23,11 @@ import {
   Workout,
 } from "@/models";
 
+/**
+ * Saves an array of database records within a transaction.
+ * @param records - Array of model instances to be saved to the database
+ * @returns Promise that resolves when all records are saved
+ */
 const saveRecords = async (
   records: (
     | User
@@ -35,7 +45,12 @@ const saveRecords = async (
     }
   });
 };
-//returns a promise
+
+/**
+ * Main function that orchestrates the database population process.
+ * Saves all sample data in sequence and closes the database connection.
+ * @returns Promise that resolves when all data is saved
+ */
 async function main() {
   try {
     await saveRecords(users);

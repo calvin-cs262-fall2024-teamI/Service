@@ -1,24 +1,32 @@
+/**
+ * @fileoverview CRUD route generator utility for Sequelize models.
+ * Provides automated creation of RESTful API endpoints with customizable options.
+ */
+
 import { tokenValidator } from "@/middlewares";
 import { asyncHandler } from "@/utils";
 import { Request, Response, Router } from "express";
 import { ModelStatic, UniqueConstraintError } from "sequelize";
 import { ApiResponse } from "./responseWrapper";
 
+/**
+ * Configuration options for CRUD route generation
+ */
 interface CrudOptions {
-  // custom route prefix
+  /** Base URL prefix for all routes */
   routePrefix?: string;
-  // allowed operations
+  /** Allowed CRUD operations */
   operations?: ("create" | "read" | "update" | "delete" | "list")[];
-  // pagination configuration
+  /** Pagination settings */
   pagination?: {
     defaultLimit: number;
     maxLimit: number;
   };
-  // allowed filters
+  /** Fields that can be used for filtering */
   allowedFilters?: string[];
-  // allowed sort fields
+  /** Fields that can be used for sorting */
   allowedSortFields?: string[];
-  // middleware
+  /** Middleware configuration per operation */
   middleware?: {
     all?: any[];
     create?: any[];
@@ -27,10 +35,16 @@ interface CrudOptions {
     delete?: any[];
     list?: any[];
   };
-  // fields to exclude from response
+  /** Fields to exclude from responses */
   excludeFields?: string[];
 }
 
+/**
+ * Creates a router with CRUD endpoints for a Sequelize model
+ * @param Model - Sequelize model to create routes for
+ * @param options - Configuration options for route generation
+ * @returns Express router with configured CRUD endpoints
+ */
 export function createCrudRouter(
   Model: ModelStatic<any>,
   options: CrudOptions = {}

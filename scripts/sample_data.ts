@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Contains sample data for populating the database with test/development data.
+ * Uses a combination of hardcoded data for specific test cases and faker.js for generating
+ * additional random data. Includes sample users, preferences, chat rooms, messages, reviews,
+ * workouts, and buddy matches.
+ */
+
 import {
   BuddyMatch,
   ChatMessage,
@@ -15,6 +22,10 @@ import {
 } from "@/types/enums";
 import { faker } from "@faker-js/faker";
 
+/**
+ * Sample user data including both specific test users and randomly generated ones.
+ * First 5 users are hardcoded for testing specific scenarios, followed by 10 random users.
+ */
 export const users = User.bulkBuild([
   {
     username: "loya",
@@ -133,6 +144,10 @@ export const users = User.bulkBuild([
     }),
 ]);
 
+/**
+ * Sample user preferences data corresponding to the users.
+ * Includes preferences for both hardcoded and random users.
+ */
 export const userPreferences = UserPreference.bulkBuild([
   {
     userId: 1,
@@ -164,6 +179,10 @@ export const userPreferences = UserPreference.bulkBuild([
     })),
 ]);
 
+/**
+ * Sample chat rooms data establishing connections between users.
+ * Creates chat rooms between user 1 and others, and additional random connections.
+ */
 export const chatRooms = ChatRoom.bulkBuild([
   {
     user1Id: 1,
@@ -195,6 +214,10 @@ export const chatRooms = ChatRoom.bulkBuild([
     })),
 ]);
 
+/**
+ * Sample chat messages data simulating conversations between users.
+ * Includes a complete conversation flow between two users.
+ */
 export const chatMessages = ChatMessage.bulkBuild([
   {
     chatRoomId: 1,
@@ -230,6 +253,10 @@ export const chatMessages = ChatMessage.bulkBuild([
   },
 ]);
 
+/**
+ * Sample review data including ratings and feedback between users.
+ * Contains both specific test reviews and randomly generated ones.
+ */
 export const reviews = Review.bulkBuild([
   {
     reviewerId: 2,
@@ -270,6 +297,10 @@ export const reviews = Review.bulkBuild([
     }),
 ]);
 
+/**
+ * Sample workout session data between users.
+ * Includes both completed and upcoming workout sessions.
+ */
 export const workouts = Workout.bulkBuild([
   {
     creatorId: 1,
@@ -298,6 +329,10 @@ export const workouts = Workout.bulkBuild([
     }),
 ]);
 
+/**
+ * Sample buddy match data showing different relationship statuses between users.
+ * Includes accepted, pending, and random status matches.
+ */
 export const buddyMatches = BuddyMatch.bulkBuild([
   {
     requesterId: 1,

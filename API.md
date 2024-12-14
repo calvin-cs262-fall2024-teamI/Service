@@ -4,8 +4,6 @@
 
 <https://swolemate-service.azurewebsites.net/api/>
 
-Example usage: <https://swolemate-service.azurewebsites.net/api/> retrieves all users.
-
 ### Routes of the API
 
 #### User Routes
