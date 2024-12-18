@@ -6,7 +6,10 @@ import { User } from "./User";
 import { UserPreference } from "./UserPreference";
 import { Workout } from "./Workout";
 
-// User - UserPreference (One-to-One)
+/**
+ * User - UserPreference Association
+ * One-to-One relationship between users and their preferences
+ */
 User.hasOne(UserPreference, {
   foreignKey: "userId",
   as: "preferences",
@@ -15,7 +18,10 @@ UserPreference.belongsTo(User, {
   foreignKey: "userId",
 });
 
-// User - BuddyMatch (One-to-Many as requester and receiver)
+/**
+ * User - BuddyMatch Associations
+ * One-to-Many relationships for both sent and received buddy requests
+ */
 User.hasMany(BuddyMatch, {
   foreignKey: "requesterId",
   as: "sentBuddyRequests",
@@ -33,7 +39,10 @@ BuddyMatch.belongsTo(User, {
   as: "receiver",
 });
 
-// User - ChatRoom (Many-to-Many through ChatRoom)
+/**
+ * User - ChatRoom Associations
+ * Many-to-Many relationships through ChatRoom for both user1 and user2
+ */
 User.hasMany(ChatRoom, {
   foreignKey: "user1Id",
   as: "chatRoomsAsUser1",
@@ -51,7 +60,10 @@ ChatRoom.belongsTo(User, {
   as: "user2",
 });
 
-// ChatRoom - ChatMessage (One-to-Many)
+/**
+ * ChatRoom - ChatMessage Association
+ * One-to-Many relationship between ChatRoom and ChatMessage
+ */
 ChatRoom.hasMany(ChatMessage, {
   foreignKey: "chatRoomId",
   as: "messages",
@@ -64,7 +76,10 @@ ChatMessage.belongsTo(User, {
   as: "sender",
 });
 
-// User - Workout (One-to-Many as creator and partner)
+/**
+ * User - Workout Associations
+ * One-to-Many relationships for both created and partner workouts
+ */
 User.hasMany(Workout, {
   foreignKey: "creatorId",
   as: "createdWorkouts",
@@ -82,7 +97,10 @@ Workout.belongsTo(User, {
   as: "partner",
 });
 
-// User - Review (One-to-Many as reviewer and reviewed)
+/**
+ * User - Review Associations
+ * One-to-Many relationships for both given and received reviews
+ */
 User.hasMany(Review, {
   foreignKey: "reviewerId",
   as: "givenReviews",

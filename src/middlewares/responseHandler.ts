@@ -1,20 +1,29 @@
+/**
+ * @fileoverview Response formatting middleware.
+ * Ensures consistent API response format across all routes.
+ */
+
 import { Request, Response, NextFunction } from "express";
 import { ApiResponse } from "@/utils/responseWrapper";
 
+/**
+ * Middleware that wraps all API responses in a consistent format.
+ * Extends Express response object to automatically wrap responses in ApiResponse format.
+ *
+ * @param req - Express request object
+ * @param res - Express response object
+ * @param next - Express next function
+ */
 export const responseHandler = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  // TODO: based on status code, return different format
-  // Extend response object
   const originalJson = res.json;
   res.json = function (body: unknown) {
-    // If response is already in ApiResponse format, return directly
     if (body instanceof ApiResponse) {
       return originalJson.call(this, body);
     }
-    // Otherwise wrap it in ApiResponse format
     return originalJson.call(this, ApiResponse.success(body));
   };
   next();

@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Authentication routes for user registration, login, and token management.
+ * Handles user authentication, profile picture uploads, and JWT token refresh.
+ */
+
 import { User } from "@/models/User";
 import { JwtPayload, JwtPayloadRaw } from "@/types";
 import { RouterWithAsyncHandler } from "@/utils";
@@ -12,11 +17,17 @@ import {
   containerClient,
   // blobServiceClient,
 } from "@/config/database";
+
+/** Express router for authentication endpoints */
 const authRouter = RouterWithAsyncHandler();
+
+/** Request body interface for login endpoint */
 interface LoginRequest {
   emailAddress: string;
   password: string;
 }
+
+/** Request body interface for registration endpoint */
 interface RegisterRequest {
   emailAddress: string;
   password: string;
@@ -36,7 +47,10 @@ interface RegisterRequest {
   cost: number | null;
 }
 
-// Login route
+/**
+ * Login route handler
+ * Authenticates user credentials and returns JWT tokens
+ */
 authRouter.post("/login", async (req: Request, res: Response) => {
   const { emailAddress, password }: LoginRequest = req.body;
 
@@ -64,7 +78,11 @@ authRouter.post("/login", async (req: Request, res: Response) => {
     refreshToken,
   });
 });
-// register route
+
+/**
+ * Registration route handler
+ * Creates new user account and returns JWT tokens
+ */
 authRouter.post("/register", async (req: Request, res: Response) => {
   const {
     emailAddress,
@@ -130,7 +148,11 @@ authRouter.post("/register", async (req: Request, res: Response) => {
     res.status(500).json(ApiResponse.error("Error registering user"));
   }
 });
-//upload Profile Picture route
+
+/**
+ * Profile picture upload route handler
+ * Handles file upload to Azure Blob Storage and updates user profile
+ */
 authRouter.post(
   "/upload-profile-picture/:id",
   uploadFile.single("profilePicture"), // Middleware to handle single file upload with key "profilePicture"
@@ -198,6 +220,10 @@ authRouter.post(
   })
 );
 
+/**
+ * Token refresh route handler
+ * Issues new access and refresh tokens using valid refresh token
+ */
 authRouter.post(
   "/refresh",
   asyncHandler(async (req: Request, res: Response) => {
@@ -253,6 +279,11 @@ authRouter.post(
   })
 );
 
+/**
+ * Generates access and refresh tokens for a user
+ * @param user - User model instance to generate tokens for
+ * @returns Object containing access and refresh tokens
+ */
 const generateTokens = (
   user: User
 ): { accessToken: string; refreshToken: string } => {
